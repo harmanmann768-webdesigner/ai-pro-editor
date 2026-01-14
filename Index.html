@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ AI Pro Editor - iPhone 17 Style</title>
+    <!-- DeepSeek AI API -->
+    <script>
+        const DEEPSEEK_API_KEY = "sk-afbf317c1a9440fe9ba57a6492a6070b";
+    </script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fabric.js for Canvas Editing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <!-- Cropper.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <style>
+        /* iPhone 17 Style Glass Morphism */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, 
+                #667eea 0%, 
+                #764ba2 25%, 
+                #f093fb 50%, 
+                #f5576c 75%, 
+                #ffd89b 100%
+            );
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .iphone-control {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dynamic-shadow {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+        
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5),
+                        0 0 40px rgba(99, 102, 241, 0.3),
+                        0 0 60px rgba(99, 102, 241, 0.1);
+        }
+        
+        /* Smooth Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+        
+        /* 3D Effect for Buttons */
+        .btn-3d {
+            transform-style: preserve-3d;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .btn-3d:active {
+            transform: translateY(4px);
+        }
+        
+        .btn-3d::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: inherit;
+            transform: translateZ(-10px);
+        }
+        
+        /* Camera Grid */
+        .camera-grid {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        /* Loading Animation */
+        .ai-loader {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: conic-gradient(#667eea, #764ba2, #f093fb, #f5576c, #ffd89b, #667eea);
+            animation: spin 1s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ai-loader::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            background: #1a1a2e;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="gradient-bg text-white min-h-screen font-sans overflow-x-hidden">
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-6 max-w-7xl">
+        
+        <!-- Header - iPhone 17 Style -->
+        <header class="flex justify-between items-center mb-8 px-6 py-4 glass-effect rounded-3xl fade-in">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center neon-glow">
+                    <i class="fas fa-magic text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                        AI Pro Editor ✨
+                    </h1>
+                    <p class="text-gray-300 text-sm">iPhone 17 Camera Style • Professional AI Editing</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <div class="iphone-control px-4 py-2">
+                    <span class="text-green-400"><i class="fas fa-bolt"></i> AI Active</span>
+                </div>
+                <button onclick="resetAll()" class="px-6 py-3 bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl font-semibold hover:opacity-90 transition-all btn-3d">
+                    <i class="fas fa-redo mr-2"></i>Reset All
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Left Column - Upload & Manual Editing -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Drag & Drop Area (iPhone Style) -->
+                <div class="glass-effect rounded-3xl p-6 dynamic-shadow fade-in">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-cloud-upload-alt mr-3 text-cyan-400"></i>
+                            Upload Image
+                        </h2>
+                        <div class="text-sm text-gray-300">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Supports PNG, JPG, WebP (Max 20MB)
+                        </div>
+                    </div>
+                    
+                    <div id="dropZone" 
+                         class="border-3 border-dashed border-cyan-400/50 rounded-2xl p-10 text-center cursor-pointer transition-all duration-300 hover:bg-cyan-900/20 camera-grid relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent animate-shimmer"></div>
+                        
+                        <div class="relative z-10">
+                            <div class="text-6xl mb-4 text-cyan-300">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <p class="text-xl font-semibold mb-2">Drag & Drop Your Image</p>
+                            <p class="text-gray-400 mb-6">or click to browse files</p>
+                            
+                            <div class="flex justify-center space-x-4 mb-6">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 rounded-xl bg-purple-900/30 flex items-center justify-center mx-auto mb-2">
+                                        <i class="fas fa-user text-2xl text-purple-300"></i>
+                                    </div>
+                                    <p class="text-sm">Portrait</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-16 h-16 rounded-xl bg-blue-900/30 flex items-center justify-center mx-auto mb-2">
+                                        <i class="fas fa-mountain text-2xl text-blue-300"></i>
+                                    </div>
+                                    <p class="text-sm">Landscape</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-16 h-16 rounded-xl bg-pink-900/30 flex items-center justify-center mx-auto mb-2">
+                                        <i class="fas fa-palette text-2xl text-pink-300"></i>
+                                    </div>
+                                    <p class="text-sm">Artwork</p>
+                                </div>
+                            </div>
+                            
+                            <input type="file" id="fileInput" class="hidden" accept="image/*">
+                            <button onclick="document.getElementById('fileInput').click()" 
+                                    class="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl font-semibold hover:opacity-90 transition-all btn-3d">
+                                <i class="fas fa-folder-open mr-2"></i>Browse Files
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 grid grid-cols-4 gap-4">
+                        <button onclick="quickUpload('portrait')" class="iphone-control text-center py-3 rounded-xl hover:bg-white/10 transition">
+                            <i class="fas fa-user text-cyan-400 mb-1 block text-xl"></i>
+                            <span class="text-sm">Sample Portrait</span>
+                        </button>
+                        <button onclick="quickUpload('landscape')" class="iphone-control text-center py-3 rounded-xl hover:bg-white/10 transition">
+                            <i class="fas fa-mountain text-blue-400 mb-1 block text-xl"></i>
+                            <span class="text-sm">Sample Landscape</span>
+                        </button>
+                        <button onclick="quickUpload('art')" class="iphone-control text-center py-3 rounded-xl hover:bg-white/10 transition">
+                            <i class="fas fa-paint-brush text-purple-400 mb-1 block text-xl"></i>
+                            <span class="text-sm">Sample Art</span>
+                        </button>
+                        <button onclick="useWebcam()" class="iphone-control text-center py-3 rounded-xl hover:bg-white/10 transition">
+                            <i class="fas fa-camera text-green-400 mb-1 block text-xl"></i>
+                            <span class="text-sm">Use Camera</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Manual Editing Tools (Canva Style) -->
+                <div class="glass-effect rounded-3xl p-6 dynamic-shadow fade-in">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-edit mr-3 text-yellow-400"></i>
+                        Manual Editing Tools
+                    </h2>
+                    
+                    <!-- Tool Tabs -->
+                    <div class="flex border-b border-gray-700 mb-6">
+                        <button onclick="switchToolTab('adjust')" class="tab-btn active px-6 py-3 font-medium">Adjust</button>
+                        <button onclick="switchToolTab('filters')" class="tab-btn px-6 py-3 font-medium">Filters</button>
+                        <button onclick="switchToolTab('effects')" class="tab-btn px-6 py-3 font-medium">Effects</button>
+                        <button onclick="switchToolTab('text')" class="tab-btn px-6 py-3 font-medium">Text</button>
+                        <button onclick="switchToolTab('stickers')" class="tab-btn px-6 py-3 font-medium">Stickers</button>
+                    </div>
+                    
+                    <!-- Adjust Tools -->
+                    <div id="adjust-tools" class="tool-section">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="space-y-2">
+                                <label class="block text-sm">Brightness</label>
+                                <input type="range" min="0" max="200" value="100" class="w-full" onchange="adjustImage('brightness', this.value)">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm">Contrast</label>
+                                <input type="range" min="0" max="200" value="100" class="w-full" onchange="adjustImage('contrast', this.value)">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm">Saturation</label>
+                                <input type="range" min="0" max="200" value="100" class="w-full" onchange="adjustImage('saturate', this.value)">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm">Blur</label>
+                                <input type="range" min="0" max="20" value="0" class="w-full" onchange="adjustImage('blur', this.value)">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 grid grid-cols-3 gap-3">
+                            <button onclick="applyFilter('sepia')" class="iphone-control py-3 rounded-lg hover:bg-yellow-900/30">
+                                <i class="fas fa-sun text-yellow-400 mr-2"></i>Sepia
+                            </button>
+                            <button onclick="applyFilter('grayscale')" class="iphone-control py-3 rounded-lg hover:bg-gray-900/30">
+                                <i class="fas fa-moon text-gray-400 mr-2"></i>Grayscale
+                            </button>
+                            <button onclick="applyFilter('invert')" class="iphone-control py-3 rounded-lg hover:bg-purple-900/30">
+                                <i class="fas fa-random text-purple-400 mr-2"></i>Invert
+                            </button>
+                            <button onclick="cropImage()" class="iphone-control py-3 rounded-lg hover:bg-green-900/30">
+                                <i class="fas fa-crop text-green-400 mr-2"></i>Crop
+                            </button>
+                            <button onclick="rotateImage()" class="iphone-control py-3 rounded-lg hover:bg-blue-900/30">
+                                <i class="fas fa-sync text-blue-400 mr-2"></i>Rotate
+                            </button>
+                            <button onclick="flipImage()" class="iphone-control py-3 rounded-lg hover:bg-pink-900/30">
+                                <i class="fas fa-exchange-alt text-pink-400 mr-2"></i>Flip
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Filters Section -->
+                    <div id="filters-tools" class="tool-section hidden">
+                        <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+                            <button onclick="applyPresetFilter('vintage')" class="filter-btn">
+                                <div class="w-20 h-20 rounded-lg bg-gradient-to-br from-yellow-800 to-brown-600 mb-2"></div>
+                                Vintage
+                            </button>
+                            <button onclick="applyPresetFilter('dramatic')" class="filter-btn">
+                                <div class="w-20 h-20 rounded-lg bg-gradient-to-br from-gray-900 to-black mb-2"></div>
+                                Dramatic
+                            </button>
+                            <button onclick="applyPresetFilter('warm')" class="filter-btn">
+                                <div class="w-20 h-20 rounded-lg bg-gradient-to-br from-orange-600 to-red-500 mb-2"></div>
+                                Warm
+                            </button>
+                            <button onclick="applyPresetFilter('cool')" class="filter-btn">
+                                <div class="w-20 h-20 rounded-lg bg-gradient-to-br from-cyan-600 to-blue-500 mb-2"></div>
+                                Cool
+                            </button>
+                            <button onclick="applyPresetFilter('cinematic')" class="filter-btn">
+                                <div class="w-20 h-20 rounded-lg bg-gradient-to-br from-purple-900 to-pink-700 mb-2"></div>
+                                Cinematic
+                            </button>
+                            <button onclick="applyPresetFilter('noir')" class="filter-btn">
+                                <div class="w-20 h-20 rounded-lg bg-gradient-to-br from-black to-gray-800 mb-2"></div>
+                                Noir
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Effects Section -->
+                    <div id="effects-tools" class="tool-section hidden">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button onclick="applyEffect('glitch')" class="effect-btn">
+                                <i class="fas fa-bolt text-xl mb-2"></i>
+                                Glitch
+                            </button>
+                            <button onclick="applyEffect('pixelate')" class="effect-btn">
+                                <i class="fas fa-th-large text-xl mb-2"></i>
+                                Pixelate
+                            </button>
+                            <button onclick="applyEffect('vignette')" class="effect-btn">
+                                <i class="fas fa-circle text-xl mb-2"></i>
+                                Vignette
+                            </button>
+                            <button onclick="applyEffect('bloom')" class="effect-btn">
+                                <i class="fas fa-sun text-xl mb-2"></i>
+                                Bloom
+                            </button>
+                            <button onclick="applyEffect('rain')" class="effect-btn">
+                                <i class="fas fa-cloud-rain text-xl mb-2"></i>
+                                Rain
+                            </button>
+                            <button onclick="applyEffect('fire')" class="effect-btn">
+                                <i class="fas fa-fire text-xl mb-2"></i>
+                                Fire
+                            </button>
+                            <button onclick="applyEffect('bokeh')" class="effect-btn">
+                                <i class="fas fa-circle-notch text-xl mb-2"></i>
+                                Bokeh
+                            </button>
+                            <button onclick="applyEffect('neon')" class="effect-btn">
+                                <i class="fas fa-lightbulb text-xl mb-2"></i>
+                                Neon
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Image Preview Canvas -->
+                <div class="glass-effect rounded-3xl p-6 dynamic-shadow fade-in">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold 
